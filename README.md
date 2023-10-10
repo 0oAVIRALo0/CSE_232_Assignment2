@@ -1,46 +1,34 @@
 # CSE_232_Assignment2
 
-Part I:
-The ByteStream class is a versatile tool for managing a stream of bytes, commonly used in
-applications where data processing occurs at the byte level. It offers functionalities for reading,
-writing, and monitoring the state of the stream.
-Key Features
-Initialization
-➔ ByteStream(const size_t capa): The class can be initialized with a specified capacity
-(capa). This capacity defines the maximum number of bytes that the stream can hold.
-Writing Data
-➔ size_t write(const string &data): This function allows you to write data to the stream. It
-ensures that the stream doesn't exceed its defined capacity. The function returns the
-number of bytes successfully written.
-Reading Data
-➔ string peek_output(const size_t len) const: This method enables you to inspect the next
-len bytes from the output side of the buffer without removing them from the stream. It
-helps in previewing the data.
-➔ void pop_output(const size_t len): To consume data from the stream, you can use this
-function. It removes the next len bytes from the output side of the buffer, allowing you to
-process or discard them.
-➔ string read(const size_t len): Similar to pop_output, this function reads the next len bytes
-from the stream but returns a copy of the data before removal. It's useful when you need
-to retain a copy of the data you're reading.
-Control and Status
-➔ void end_input(): You can use this method to mark the input as ended. Once input is
-ended, no more data can be written to the stream.
-➔ bool input_ended() const: This function checks whether the input has ended, providing a
-convenient way to determine if further writing operations are allowed.
-➔ size_t buffer_size() const: It returns the current size of the buffer, indicating how many
-bytes are currently stored in the stream.➔ bool buffer_empty() const: You can use this function to check if the buffer is empty, which
-is useful to determine if there is any data available for reading.
-➔ bool eof() const: The eof function checks if the end of the stream has been reached. It
-considers both the input being ended and the buffer being empty.
-➔ size_t bytes_written() const: This method returns the total number of bytes that have
-been written to the stream since its creation.
-➔ size_t bytes_read() const: It returns the total number of bytes that have been read from
-the stream since its creation.
-➔ size_t remaining_capacity() const: To find out how much space is left in the stream (i.e.,
-the remaining capacity), you can use this function.
-Error Handling
-➔ void set_error(): This function is used to set an error flag in cases where an error
-condition is encountered during operations. You can check for errors using the error()
-function.
-➔ bool error() const: The error() function checks whether an error condition has been set in
-the ByteStream. This allows for proper error handling when needed.
+TCP Stream Reassembler
+
+This code implements a TCP stream reassembler, capable of handling out-of-order segments and reconstructing the original data stream.
+
+ByteStream Class
+  - The ByteStream class provides an interface for writing and reading bytes. It handles input and output operations and keeps track of the number of bytes written and read. The class supports operations      like writing, reading, peeking, and checking stream status (input ended, empty, and EOF).
+
+StreamReassembler Class
+  - The StreamReassembler class is a stream reassembler capable of handling TCP segments received out of order. It buffers segments and reconstructs the original data stream based on their sequence            numbers. The reassembler ensures correct sequencing and handles cases where segments arrive out of order or with gaps.
+
+TCPReceiver Class
+  - The TCPReceiver class receives TCP segments, processes them, and interacts with the stream reassembler to reconstruct the original data stream. It manages sequence number unwrapping and handles            incoming segments with SYN and FIN flags.
+
+How to Use
+
+ByteStream Class:
+  - Create a ByteStream object with a specified capacity.
+  - Use write() to add data to the stream.
+  - Use read(len) to read len bytes from the stream.
+  - Check stream status using methods like input_ended(), eof(), and buffer_empty().
+
+StreamReassembler Class:
+  - Create a StreamReassembler object with a specified capacity.
+  - Call push_substring(data, index, eof) to add segments to the reassembler.
+  - Use unassembled_bytes() to check the number of unassembled bytes.
+  - Use empty() to check if the reassembler is empty.
+  - Call ack_index() to get the acknowledgment index.
+
+TCPReceiver Class:
+  - Receive TCP segments using the segment_received(seg) method.
+  - Get the next acknowledgment number using ackno().
+  - Check the window size using window_size().
