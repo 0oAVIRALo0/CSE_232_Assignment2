@@ -1,5 +1,3 @@
-# CSE_232_Assignment2
-
 TCP Stream Reassembler
 
 This code implements a TCP stream reassembler, capable of handling out-of-order segments and reconstructing the original data stream.
